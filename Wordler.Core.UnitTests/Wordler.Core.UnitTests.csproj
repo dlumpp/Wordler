@@ -23,8 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wordler.Core.Csharp\Wordler.Core.Csharp.csproj" />
-    <ProjectReference Include="..\Wordler.Core\Wordler.Core.fsproj" />
+    <ProjectReference Include="..\Wordler.Core\Wordler.Core.csproj" />
   </ItemGroup>
 
 </Project>

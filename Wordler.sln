@@ -5,11 +5,9 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Web", "Wordler.Web\Wordler.Web.csproj", "{7358381A-3D07-4961-81F6-FFF771851CAA}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Wordler.Core", "Wordler.Core\Wordler.Core.fsproj", "{443D86E8-B0BD-45AF-9ED4-52962433BCF2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Core.UnitTests", "Wordler.Core.UnitTests\Wordler.Core.UnitTests.csproj", "{0BE52C09-91CF-499F-8840-8126FF0B924D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wordler.Core.Csharp", "Wordler.Core.Csharp\Wordler.Core.Csharp.csproj", "{8A2CE0C4-7E8A-436B-AC57-14330A920C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Core", "Wordler.Core\Wordler.Core.csproj", "{8A2CE0C4-7E8A-436B-AC57-14330A920C05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{7358381A-3D07-4961-81F6-FFF771851CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7358381A-3D07-4961-81F6-FFF771851CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7358381A-3D07-4961-81F6-FFF771851CAA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{443D86E8-B0BD-45AF-9ED4-52962433BCF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{443D86E8-B0BD-45AF-9ED4-52962433BCF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{443D86E8-B0BD-45AF-9ED4-52962433BCF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{443D86E8-B0BD-45AF-9ED4-52962433BCF2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BE52C09-91CF-499F-8840-8126FF0B924D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BE52C09-91CF-499F-8840-8126FF0B924D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BE52C09-91CF-499F-8840-8126FF0B924D}.Release|Any CPU.ActiveCfg = Release|Any CPU

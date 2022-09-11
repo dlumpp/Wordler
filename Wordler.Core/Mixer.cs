@@ -1,4 +1,4 @@
-﻿namespace Wordler.Core.Csharp
+﻿namespace Wordler.Core
 {
     //internal
     public class WordPad
