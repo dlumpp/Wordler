@@ -3,7 +3,7 @@ namespace Wordler.Core.UnitTests
     public class MixerTests
     {
 
-        IEnumerable<IEnumerable<char?>> Act(IEnumerable<LetterSpace> pool) => Wordler.Core.Mixer.Mix(pool.ToList());
+        IEnumerable<IEnumerable<char?>> Act(params LetterSpace[] pool) => Wordler.Core.Mixer.Mix(pool.ToList());
 
         private string LettersToWord(IEnumerable<char?> letters) => new(letters.Select(l => l ?? '_').ToArray());
 
@@ -18,8 +18,7 @@ namespace Wordler.Core.UnitTests
         [Fact]
         public void OneGreen()
         {
-            var clues = new[] { new LetterSpace { Value = 'A', At = 0 } };
-            var actual = Act(clues);
+            var actual = Act('A'.At(0));
             var words = actual.Select(x => LettersToWord(x)).ToArray();
             words.Single().Should().Be("A____");
         }
@@ -27,11 +26,7 @@ namespace Wordler.Core.UnitTests
         [Fact]
         public void TwoGreen()
         {
-            var clues = new LetterSpace[] { 
-                new()  { Value = 'E', At = 2 } ,
-                new()  { Value = 'E', At = 3 } ,
-            };
-            var actual = Act(clues);
+            var actual = Act('E'.At(2), 'E'.At(3));
             var words = actual.Select(x => LettersToWord(x)).ToArray();
             words.Single().Should().Be("__EE_");
         }
@@ -39,9 +34,7 @@ namespace Wordler.Core.UnitTests
         [Fact]
         public void OneYellow()
         {
-            var a = new LetterSpace { Value = 'A' };
-            a.NotAt.Add(1);
-            var actual = Act(new[] { a });
+            var actual = Act('A'.NotAt(1));
             actual.Select(x => LettersToWord(x)).Should().Equal(
                "A____",
                "__A__",
@@ -52,10 +45,7 @@ namespace Wordler.Core.UnitTests
         [Fact]
         public void OneYellowTwoNots()
         {
-            var t = new LetterSpace { Value = 'T' };
-            t.NotAt.Add(3);
-            t.NotAt.Add(4);
-            var actual = Act(new[] { t });
+            var actual = Act('T'.NotAt(3, 4));
             var words = actual.Select(x => LettersToWord(x)).ToArray();
             words.Should().Equal(
                 "T____",
@@ -66,10 +56,7 @@ namespace Wordler.Core.UnitTests
         [Fact]
         public void GreensAndYellow()
         {
-            var t = new LetterSpace { Value = 'T', At = 0 };
-            var i = new LetterSpace { Value = 'I', At = 3 };
-            var a = new LetterSpace { Value = 'A', NotAt = new() { 1, 2 } };
-            var actual = Act(new[] { t, i, a });
+            var actual = Act('T'.At(0), 'I'.At(3), 'A'.NotAt(1,2));
             var words = actual.Select(x => LettersToWord(x)).ToArray();
             words.Single().Should().Be("T__IA");
         }
