@@ -1,5 +1,23 @@
 ﻿@page "/"
+@using Wordler.Core
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Wordler</PageTitle>
 
-Welcome to your new app.
+<Wordler.Web.Components.WordInput @bind-Word="Word"
+                                  @bind-Word:event="WordChanged">
+
+</Wordler.Web.Components.WordInput>
+
+@code {
+    public LetterSpace[]? Word { get; set; }
+
+    List<string> Possibilities = new();
+
+    void WordChanged()
+    {
+        Possibilities = Mixer.Mix(Word).Select(LettersToWord).ToList();
+    }
+
+    string LettersToWord(IEnumerable<char?> letters) => 
+        new(letters.Select(l => l ?? '_').ToArray());
+}

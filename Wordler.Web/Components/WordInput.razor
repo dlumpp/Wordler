@@ -1,0 +1,30 @@
+﻿@using Wordler.Core
+
+@for (int i = 0; i < 5; i++)
+{
+    <LetterInput Status="LetterInput.LetterStatus.Yellow"
+             Index="i"
+             LetterChanged="@LetterInputChanged">
+    </LetterInput>
+}
+
+@code {
+
+    [Parameter]
+    public LetterSpace?[] Word { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<LetterSpace?[]> WordChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Word = new LetterSpace[5];
+    }
+
+    async Task LetterInputChanged(LetterSpace letterSpace)
+    {
+        int index = letterSpace.NotAt.Single();
+        Word[index] = letterSpace;
+        await WordChanged.InvokeAsync(Word);
+    }
+}

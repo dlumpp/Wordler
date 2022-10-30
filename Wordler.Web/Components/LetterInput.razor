@@ -1,0 +1,42 @@
+﻿@using Wordler.Core;
+
+<input type="text"
+       @oninput="OnInput"
+       onfocus="this.select();"
+       maxlength="1" />
+
+@code {
+    public enum LetterStatus
+    {
+        Yellow,
+        Green
+    }
+
+    [Parameter, EditorRequired]
+    public LetterStatus Status { get; set; }
+
+    [Parameter, EditorRequired]
+    public int Index { get; set; }
+
+    [Parameter]
+    public LetterSpace Letter { get; set; } = new LetterSpace();
+
+    [Parameter]
+    public EventCallback<LetterSpace> LetterChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Letter.NotAt.Add(Index);
+    }
+
+    async Task OnInput(ChangeEventArgs e)
+    {
+        string? inputValue = (string?)e.Value;
+        char? inputLetter = string.IsNullOrWhiteSpace(inputValue)
+            ? null
+            : inputValue?.FirstOrDefault();
+
+        Letter.Value = inputLetter;
+        await LetterChanged.InvokeAsync(Letter);
+    }
+}
