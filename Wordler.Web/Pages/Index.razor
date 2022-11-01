@@ -3,19 +3,23 @@
 
 <PageTitle>Wordler</PageTitle>
 
-<Wordler.Web.Components.WordInput @bind-Word="Word"
-                                  @bind-Word:event="WordChanged">
-
+<Wordler.Web.Components.WordInput WordChanged="@WordChanged">
 </Wordler.Web.Components.WordInput>
 
+<div>
+    @foreach (var possible in Possibilites)
+   {
+       <p>@possible</p>
+   }
+</div>
+
 @code {
-    public LetterSpace[]? Word { get; set; }
+    List<string> Possibilites { get; set; } = new();
 
-    List<string> Possibilities = new();
-
-    void WordChanged()
+    void WordChanged(LetterSpace?[] word)
     {
-        Possibilities = Mixer.Mix(Word).Select(LettersToWord).ToList();
+        var letters = word.Where(l => l is not null).Cast<LetterSpace>();
+        Possibilites = Mixer.Mix(letters).Select(LettersToWord).ToList();
     }
 
     string LettersToWord(IEnumerable<char?> letters) => 
