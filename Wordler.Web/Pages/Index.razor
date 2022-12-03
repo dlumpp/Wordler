@@ -3,25 +3,55 @@
 
 <PageTitle>Wordler</PageTitle>
 
-<Wordler.Web.Components.WordInput WordChanged="@WordChanged">
-</Wordler.Web.Components.WordInput>
+<div>
+
+    <Wordler.Web.Components.WordInput WordChanged="@WordChanged"
+                                      Status="LetterStatus.Yellow" />
+</div>
+<div>
+
+    <Wordler.Web.Components.WordInput WordChanged="@GreenWordChanged"
+                                      Status="LetterStatus.Green" />
+</div>
 
 <div>
     @foreach (var possible in Possibilites)
-   {
-       <p>@possible</p>
-   }
+    {
+        <p>@possible</p>
+    }
 </div>
 
 @code {
-    List<string> Possibilites { get; set; } = new();
+
+    IEnumerable<string> Possibilites { get; set; } = Array.Empty<string>();
+
+    IEnumerable<LetterSpace>? YellowWord;
+    IEnumerable<LetterSpace>? GreenWord;
 
     void WordChanged(LetterSpace?[] word)
     {
-        var letters = word.Where(l => l is not null).Cast<LetterSpace>();
+        YellowWord = WhereNotNull(word);
+        RecalcPossibilities();
+    }
+
+    void GreenWordChanged(LetterSpace?[] word)
+    {
+        GreenWord = WhereNotNull(word);
+        RecalcPossibilities();
+    }
+
+    IEnumerable<LetterSpace> WhereNotNull(IEnumerable<LetterSpace?> values) =>
+        values.Where(l => l is not null && l.Value is not null)
+            .Cast<LetterSpace>();
+
+    void RecalcPossibilities()
+    {
+        var letters = EmptyIfNull(YellowWord).Concat(EmptyIfNull(GreenWord));
         Possibilites = Mixer.Mix(letters).Select(LettersToWord).ToList();
     }
 
-    string LettersToWord(IEnumerable<char?> letters) => 
+    IEnumerable<T> EmptyIfNull<T>(IEnumerable<T>? values) => values ?? Array.Empty<T>();
+
+    string LettersToWord(IEnumerable<char?> letters) =>
         new(letters.Select(l => l ?? '_').ToArray());
 }

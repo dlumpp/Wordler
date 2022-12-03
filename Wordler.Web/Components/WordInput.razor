@@ -2,7 +2,7 @@
 
 @for (int i = 0; i < 5; i++)
 {
-    <LetterInput Status="LetterInput.LetterStatus.Yellow"
+    <LetterInput Status="Status"
              Index="i"
              LetterChanged="@LetterInputChanged">
     </LetterInput>
@@ -10,11 +10,13 @@
 
 @code {
 
-    [Parameter]
-    public LetterSpace?[] Word { get; set; } = default!;
+    [Parameter, EditorRequired]
+    public LetterStatus Status { get; set; }
 
     [Parameter]
     public EventCallback<LetterSpace?[]> WordChanged { get; set; }
+
+    LetterSpace?[] Word { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -23,7 +25,7 @@
 
     async Task LetterInputChanged(LetterSpace letterSpace)
     {
-        int index = letterSpace.NotAt.Single();
+        int index = letterSpace.At ?? letterSpace.NotAt.Single();
         Word[index] = letterSpace;
         await WordChanged.InvokeAsync(Word);
     }

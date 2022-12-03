@@ -6,11 +6,6 @@
        maxlength="1" />
 
 @code {
-    public enum LetterStatus
-    {
-        Yellow,
-        Green
-    }
 
     [Parameter, EditorRequired]
     public LetterStatus Status { get; set; }
@@ -26,7 +21,15 @@
 
     protected override void OnInitialized()
     {
-        Letter.NotAt.Add(Index);
+        switch (Status)
+        {
+            case LetterStatus.Yellow:
+                Letter.NotAt.Add(Index);
+                break;
+            case LetterStatus.Green:
+                Letter.At = Index;
+                break;
+        }
     }
 
     async Task OnInput(ChangeEventArgs e)
