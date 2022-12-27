@@ -1,4 +1,6 @@
-﻿namespace Wordler.Core
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Wordler.Core
 {
     //internal
     public class WordPad
@@ -38,7 +40,7 @@
             var letterQ = new Stack<LetterSpace>(pool);
             var initPad = new WordPad { Pool = letterQ };
             var pads = PlaceAll(new[] { initPad });
-            return pads.Select(wp => wp.Word.Letters);
+            return pads.Select(wp => wp.Word.Letters).Distinct(new EnumerableValuesComparer<char?>());
         }
 
         private static IEnumerable<WordPad> PlaceAll(IEnumerable<WordPad> wordPads)
@@ -82,5 +84,13 @@
                 }
             }
         }
+    }
+
+    public class EnumerableValuesComparer<T> : IEqualityComparer<IEnumerable<T>>
+    {
+        public bool Equals(IEnumerable<T>? x, IEnumerable<T>? y) => (x is null || y is null) ? false : Enumerable.SequenceEqual(x, y);
+
+        public int GetHashCode([DisallowNull] IEnumerable<T> obj) =>
+            obj.Select(i => i?.GetHashCode() ?? 0).Sum();
     }
 }

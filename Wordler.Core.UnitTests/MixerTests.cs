@@ -43,6 +43,16 @@ namespace Wordler.Core.UnitTests
         }
 
         [Fact]
+        public void DoubleYellow()
+        {
+            var actual = Act('E'.NotAt(0, 4), 'E'.NotAt(0, 4));
+            actual.Select(x => LettersToWord(x)).Should().Equal(
+               "_EE__", 
+               "_E_E_", 
+               "__EE_");
+        }
+
+        [Fact]
         public void OneYellowTwoNots()
         {
             var actual = Act('T'.NotAt(3, 4));
