@@ -52,16 +52,29 @@
     IEnumerable<LetterSpace> AggregateYellowKnowledge()
     {
         var agg = new List<LetterSpace>();
+
+        //spread the same "not at" info to all same letters across all words
+        var sameLetters = YellowWords.Values.SelectMany(word => word)
+            .GroupBy(l => l.Value)
+            .Where(g => g.Count() > 1);
+        var distinctNotIndexes = sameLetters.SelectMany(l => l.SelectMany(m => m.NotAt)).ToHashSet();
+        foreach (var letterGroup in sameLetters)
+        {
+            foreach (var repeatLetter in letterGroup)
+            {
+                repeatLetter.NotAt = distinctNotIndexes.ToList();
+            }
+        }
+
+        //aggregate words to a single list of letters
         foreach (var word in YellowWords.Values)
         {
-            //spread the same "not at" info to all repeat letters within the same word
+            //add repeat letters if within the same word
             var repeatLetters = word.GroupBy(l => l.Value).Where(g => g.Count() > 1);
-            var notIndexes = repeatLetters.SelectMany(l => l.SelectMany(m => m.NotAt)).ToHashSet();
             foreach (var letterGroup in repeatLetters)
             {
                 foreach (var repeatLetter in letterGroup)
                 {
-                    repeatLetter.NotAt = notIndexes.ToList();
                     agg.Add(repeatLetter);
                 }
             }
@@ -69,31 +82,14 @@
             var remainingLetters = word.Except(agg);
             foreach (var letter in remainingLetters)
             {
-                var match = agg.SingleOrDefault(l => l.Value == letter.Value);
-                if(match is null)
+                // might already be there w aggregated indexes from another word
+                if (!agg.Any(l => l.Value == letter.Value))
                 {                    
                     agg.Add(letter);
-                }
-                else 
-                {
-                    foreach (var notAt in letter.NotAt)
-                    {
-                        if (!match.NotAt.Contains(notAt))
-                        {
-                            match.NotAt.Add(notAt);
-                        }
-                    }
                 }
             }
         }
         return agg;
-        //var letterGroups = YellowWords.Values.SelectMany(word => word).GroupBy(l => l.Value);
-        //return letterGroups.Select(lg => 
-        //    new LetterSpace 
-        //    { 
-        //        Value = lg.Key, 
-        //        NotAt = lg.SelectMany(n => n.NotAt).Distinct().ToList() 
-        //    });
     }
 
     IEnumerable<T> EmptyIfNull<T>(IEnumerable<T>? values) => values ?? Array.Empty<T>();
