@@ -14,23 +14,7 @@
     public int Index { get; set; }
 
     [Parameter]
-    public LetterSpace Letter { get; set; } = new LetterSpace();
-
-    [Parameter]
     public EventCallback<LetterSpace> LetterChanged { get; set; }
-
-    protected override void OnInitialized()
-    {
-        switch (Status)
-        {
-            case LetterStatus.Yellow:
-                Letter.NotAt.Add(Index);
-                break;
-            case LetterStatus.Green:
-                Letter.At = Index;
-                break;
-        }
-    }
 
     async Task OnInput(ChangeEventArgs e)
     {
@@ -39,7 +23,16 @@
             ? null
             : inputValue?.FirstOrDefault();
 
-        Letter.Value = inputLetter;
-        await LetterChanged.InvokeAsync(Letter);
+        var letter = new LetterSpace { Value = inputLetter };
+        switch (Status)
+        {
+            case LetterStatus.Yellow:
+                letter.NotAt.Add(Index);
+                break;
+            case LetterStatus.Green:
+                letter.At = Index;
+                break;
+        }
+        await LetterChanged.InvokeAsync(letter);
     }
 }
