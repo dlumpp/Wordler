@@ -51,13 +51,49 @@
 
     IEnumerable<LetterSpace> AggregateYellowKnowledge()
     {
-        var letterGroups = YellowWords.Values.SelectMany(l => l).GroupBy(l => l.Value);
-        return letterGroups.Select(lg => 
-            new LetterSpace 
-            { 
-                Value = lg.Key, 
-                NotAt = lg.SelectMany(n => n.NotAt).Distinct().ToList() 
-            });
+        var agg = new List<LetterSpace>();
+        foreach (var word in YellowWords.Values)
+        {
+            //spread the same "not at" info to all repeat letters within the same word
+            var repeatLetters = word.GroupBy(l => l.Value).Where(g => g.Count() > 1);
+            var notIndexes = repeatLetters.SelectMany(l => l.SelectMany(m => m.NotAt)).ToHashSet();
+            foreach (var letterGroup in repeatLetters)
+            {
+                foreach (var repeatLetter in letterGroup)
+                {
+                    repeatLetter.NotAt = notIndexes.ToList();
+                    agg.Add(repeatLetter);
+                }
+            }
+            //aggregate non-repeats
+            var remainingLetters = word.Except(agg);
+            foreach (var letter in remainingLetters)
+            {
+                var match = agg.SingleOrDefault(l => l.Value == letter.Value);
+                if(match is null)
+                {                    
+                    agg.Add(letter);
+                }
+                else 
+                {
+                    foreach (var notAt in letter.NotAt)
+                    {
+                        if (!match.NotAt.Contains(notAt))
+                        {
+                            match.NotAt.Add(notAt);
+                        }
+                    }
+                }
+            }
+        }
+        return agg;
+        //var letterGroups = YellowWords.Values.SelectMany(word => word).GroupBy(l => l.Value);
+        //return letterGroups.Select(lg => 
+        //    new LetterSpace 
+        //    { 
+        //        Value = lg.Key, 
+        //        NotAt = lg.SelectMany(n => n.NotAt).Distinct().ToList() 
+        //    });
     }
 
     IEnumerable<T> EmptyIfNull<T>(IEnumerable<T>? values) => values ?? Array.Empty<T>();

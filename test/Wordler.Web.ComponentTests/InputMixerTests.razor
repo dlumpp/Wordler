@@ -35,4 +35,47 @@
         raised.Single().Should().Be(TestPossibility);
     }
 
+    [Fact]
+    public void ShouldPassDoubleYellowToMixer_WhenInput()
+    {
+        var raised = new List<string>();
+        Action<IEnumerable<string>> changed = (e) => raised = e.ToList();
+        var cut = Render(@<InputMixer PossibilitesChanged="@changed" />);
+
+        var firstInput = cut.Find("input");
+        firstInput.Input("z");
+        var secondInput = cut.Find("input:nth-of-type(2)");
+        secondInput.Input("z");
+
+        CapturedMixerInput.Should().HaveCount(2).And
+            .AllSatisfy(i =>
+            {
+                i.Value.Should().Be('z');
+                i.NotAt.Should().BeEquivalentTo(new[] { 0, 1 });
+            });
+
+        raised.Single().Should().Be(TestPossibility);
+    }
+
+    [Fact]
+    public void ShouldPassSingleYellowTwoNotsToMixer_WhenInput()
+    {
+        var raised = new List<string>();
+        Action<IEnumerable<string>> changed = (e) => raised = e.ToList();
+        var cut = Render(@<InputMixer PossibilitesChanged="@changed" />);
+
+        var addButton = cut.Find("button");
+        addButton.Click();
+        var firstWordFirstLetter = cut.Find(".yellow > input");
+        var secondWordSecondLetter = cut.Find(".yellow:nth-of-type(2) > input:nth-of-type(2)");
+        firstWordFirstLetter.Input("y");
+        secondWordSecondLetter.Input("y");
+
+        var letter = CapturedMixerInput.Single();
+        letter.Value.Should().Be('y');
+        letter.NotAt.Should().BeEquivalentTo(new[] { 0, 1 });
+
+        raised.Single().Should().Be(TestPossibility);
+    }
+
 }

@@ -1,12 +1,14 @@
 ﻿@using Wordler.Core
 
-@for (int i = 0; i < 5; i++)
-{
-    <LetterInput Status="Status"
-             Index="i"
-             LetterChanged="@LetterInputChanged">
-    </LetterInput>
-}
+<div class="@GetStatusClass()">
+    @for (int i = 0; i < 5; i++)
+    {
+        <LetterInput Status="Status"
+                 Index="i"
+                 LetterChanged="@LetterInputChanged">
+        </LetterInput>
+    }
+</div>
 
 @code {
 
@@ -29,4 +31,6 @@
         Word[index] = letterSpace;
         await WordChanged.InvokeAsync(Word);
     }
+
+    string GetStatusClass() => Status.ToString().ToLower();
 }
