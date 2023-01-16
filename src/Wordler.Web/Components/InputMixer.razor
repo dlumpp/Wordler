@@ -1,0 +1,48 @@
+﻿@using Wordler.Core;
+
+<div>
+
+    <Wordler.Web.Components.WordInput WordChanged="@YellowWordChangedAsync"
+                                      Status="LetterStatus.Yellow" />
+</div>
+<div>
+
+    <Wordler.Web.Components.WordInput WordChanged="@GreenWordChangedAsync"
+                                      Status="LetterStatus.Green" />
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<IEnumerable<string>> PossibilitesChanged { get; set; }
+
+    IEnumerable<LetterSpace>? YellowWord;
+    IEnumerable<LetterSpace>? GreenWord;
+
+    async Task YellowWordChangedAsync(LetterSpace?[] word)
+    {
+        YellowWord = WhereNotNull(word);
+        await RecalcPossibilitiesAsync();
+    }
+
+    async Task GreenWordChangedAsync(LetterSpace?[] word)
+    {
+        GreenWord = WhereNotNull(word);
+        await RecalcPossibilitiesAsync();
+    }
+
+    IEnumerable<LetterSpace> WhereNotNull(IEnumerable<LetterSpace?> values) =>
+        values.Where(l => l is not null && l.Value is not null)
+            .Cast<LetterSpace>();
+
+    async Task RecalcPossibilitiesAsync()
+    {
+        var letters = EmptyIfNull(YellowWord).Concat(EmptyIfNull(GreenWord));
+        var mix = Mixer.Mix(letters).Select(LettersToWord).ToList();
+        await PossibilitesChanged.InvokeAsync(mix);
+    }
+
+    IEnumerable<T> EmptyIfNull<T>(IEnumerable<T>? values) => values ?? Array.Empty<T>();
+
+    string LettersToWord(IEnumerable<char?> letters) =>
+        new(letters.Select(l => l ?? '_').ToArray());
+}
