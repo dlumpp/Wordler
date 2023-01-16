@@ -51,10 +51,14 @@
 
     IEnumerable<LetterSpace> AggregateYellowKnowledge()
     {
+        //clone current state to not mutate during aggregation
+        List<List<LetterSpace>> yellowWords = YellowWords.Values
+            .Select(i => i.Select(j => new LetterSpace { Value = j.Value, NotAt = new(j.NotAt) }).ToList()).ToList();
+
         var agg = new List<LetterSpace>();
 
         //spread the same "not at" info to all same letters across all words
-        var sameLetters = YellowWords.Values.SelectMany(word => word)
+        var sameLetters = yellowWords.SelectMany(word => word)
             .GroupBy(l => l.Value)
             .Where(g => g.Count() > 1);
         var distinctNotIndexes = sameLetters.SelectMany(l => l.SelectMany(m => m.NotAt)).ToHashSet();
@@ -67,7 +71,7 @@
         }
 
         //aggregate words to a single list of letters
-        foreach (var word in YellowWords.Values)
+        foreach (var word in yellowWords)
         {
             //add repeat letters if within the same word
             var repeatLetters = word.GroupBy(l => l.Value).Where(g => g.Count() > 1);
