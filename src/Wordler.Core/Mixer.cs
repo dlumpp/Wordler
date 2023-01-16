@@ -2,8 +2,7 @@
 
 namespace Wordler.Core
 {
-    //internal
-    public class WordPad
+    internal class WordPad
     {
         public Stack<LetterSpace> Pool { get; set; }
 
@@ -12,23 +11,16 @@ namespace Wordler.Core
             Pool = pool;
         }
 
-        public Word Word { get; set; } = new();
+        public List<char?> Word { get; set; } = CreateBlankWord();
 
         public bool IsCompleted => Pool.Count == 0;
 
         public WordPad Clone() => new(new(Pool))
         {
-            Word = new() { Letters = new(Word.Letters) }
+            Word = Word.Select(i => i).ToList()
         };
-    }
 
-    //internal
-    // is this type useless?
-    public class Word
-    {
-        const int WordSize = 5;
-
-        public List<char?> Letters { get; set; } = new(Enumerable.Range(0, WordSize).Select(i => default(char?)));
+        private static List<char?> CreateBlankWord() => new(Enumerable.Range(0, Mixer.WordSize).Select(i => default(char?)));
     }
 
     public class LetterSpace
@@ -38,14 +30,16 @@ namespace Wordler.Core
         public List<int> NotAt { get; set; } = new(); // >1 had to come from multiple guesses
     }
 
-    public class Mixer
+    public static class Mixer
     {
+        public const int WordSize = 5;
+
         public static IEnumerable<IEnumerable<char?>> Mix(IEnumerable<LetterSpace> pool)
         {
             var letterQ = new Stack<LetterSpace>(pool);
             var initPad = new WordPad(letterQ);
             var pads = PlaceAll(new[] { initPad });
-            return pads.Select(wp => wp.Word.Letters).Distinct(new EnumerableValuesComparer<char?>());
+            return pads.Select(wp => wp.Word).Distinct(new EnumerableValuesComparer<char?>());
         }
 
         private static IEnumerable<WordPad> PlaceAll(IEnumerable<WordPad> wordPads)
@@ -69,9 +63,9 @@ namespace Wordler.Core
         private static IEnumerable<WordPad> PlaceNext(WordPad wordPad)
         {
             var toPlace = wordPad.Pool.Pop();
-            for (int i = 0; i < wordPad.Word.Letters.Count; i++)
+            for (int i = 0; i < wordPad.Word.Count; i++)
             {
-                var letters = wordPad.Word.Letters;
+                var letters = wordPad.Word;
                 if (letters[i].HasValue)
                     continue;
 
@@ -84,14 +78,14 @@ namespace Wordler.Core
                 if (!toPlace.At.HasValue && !toPlace.NotAt.Contains(i))
                 {
                     var branch = wordPad.Clone();
-                    branch.Word.Letters[i] = toPlace.Value;
+                    branch.Word[i] = toPlace.Value;
                     yield return branch;
                 }
             }
         }
     }
 
-    public class EnumerableValuesComparer<T> : IEqualityComparer<IEnumerable<T>>
+    internal class EnumerableValuesComparer<T> : IEqualityComparer<IEnumerable<T>>
     {
         public bool Equals(IEnumerable<T>? x, IEnumerable<T>? y) => (x is null || y is null) ? false : Enumerable.SequenceEqual(x, y);
 
