@@ -1,26 +1,32 @@
 ﻿@using Wordler.Core;
+@using Wordler.Web.Components;
 
 <div>
-
-    <Wordler.Web.Components.WordInput WordChanged="@YellowWordChangedAsync"
-                                      Status="LetterStatus.Yellow" />
+    @for (int i = 0; i < YellowWordCount; i++)
+    {
+        var wordIndex = i;
+        <WordInput WordChanged="@(word => YellowWordChangedAsync(word, wordIndex))" Status="LetterStatus.Yellow" />
+    }
+    <button @onclick="@(() => YellowWordCount++)">+</button>
 </div>
-<div>
 
-    <Wordler.Web.Components.WordInput WordChanged="@GreenWordChangedAsync"
-                                      Status="LetterStatus.Green" />
+<div>
+    <WordInput WordChanged="@GreenWordChangedAsync" Status="LetterStatus.Green" />
 </div>
 
 @code {
     [Parameter]
     public EventCallback<IEnumerable<string>> PossibilitesChanged { get; set; }
 
-    IEnumerable<LetterSpace>? YellowWord;
+    int YellowWordCount = 1;
+
+    Dictionary<int, IEnumerable<LetterSpace>> YellowWords = new ();
+
     IEnumerable<LetterSpace>? GreenWord;
 
-    async Task YellowWordChangedAsync(LetterSpace?[] word)
+    async Task YellowWordChangedAsync(LetterSpace?[] word, int wordIndex)
     {
-        YellowWord = WhereNotNull(word);
+        YellowWords[wordIndex] = WhereNotNull(word);
         await RecalcPossibilitiesAsync();
     }
 
@@ -36,9 +42,20 @@
 
     async Task RecalcPossibilitiesAsync()
     {
-        var letters = EmptyIfNull(YellowWord).Concat(EmptyIfNull(GreenWord));
+        var letters = EmptyIfNull(AggregateYellowKnowledge()).Concat(EmptyIfNull(GreenWord));
         var mix = Mixer.Mix(letters).Select(LettersToWord).ToList();
         await PossibilitesChanged.InvokeAsync(mix);
+    }
+
+    IEnumerable<LetterSpace> AggregateYellowKnowledge()
+    {
+        var letterGroups = YellowWords.Values.SelectMany(l => l).GroupBy(l => l.Value);
+        return letterGroups.Select(lg => 
+            new LetterSpace 
+            { 
+                Value = lg.Key, 
+                NotAt = lg.SelectMany(n => n.NotAt).Distinct().ToList() 
+            });
     }
 
     IEnumerable<T> EmptyIfNull<T>(IEnumerable<T>? values) => values ?? Array.Empty<T>();
