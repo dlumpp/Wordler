@@ -1,6 +1,8 @@
 ﻿@using Wordler.Core;
 @using Wordler.Web.Components;
 
+@inject IMixerService MixerService;
+
 <div>
     @for (int i = 0; i < YellowWordCount; i++)
     {
@@ -43,7 +45,7 @@
     async Task RecalcPossibilitiesAsync()
     {
         var letters = EmptyIfNull(AggregateYellowKnowledge()).Concat(EmptyIfNull(GreenWord));
-        var mix = Mixer.Mix(letters).Select(LettersToWord).ToList();
+        var mix = MixerService.Mix(letters).Select(LettersToWord).ToList();
         await PossibilitesChanged.InvokeAsync(mix);
     }
 
