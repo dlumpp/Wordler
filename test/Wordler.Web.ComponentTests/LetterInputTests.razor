@@ -1,0 +1,69 @@
+﻿@inherits TestContext
+
+@code {
+    [Fact]
+    public void ShouldPassLetterAtIndex_WhenGreenLetterInput()
+    {
+        var raisedLetter = new LetterSpace();
+        Action<LetterSpace> changed = (e) => raisedLetter = e;
+        var cut = Render(@<LetterInput Status="LetterStatus.Green" Index="1" LetterChanged="changed" />);
+
+        var input = cut.Find("input");
+        input.Input("z");
+
+        raisedLetter.Value.Should().Be('z');
+        raisedLetter.At.Should().Be(1);
+        raisedLetter.NotAt.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void ShouldPassNullAtIndex_WhenGreenNullOrWhitespaceInput(string value)
+    {
+        var raisedLetter = new LetterSpace();
+        Action<LetterSpace> changed = (e) => raisedLetter = e;
+        var cut = Render(@<LetterInput Status="LetterStatus.Green" Index="1" LetterChanged="changed" />);
+
+        var input = cut.Find("input");
+        input.Input(value);
+
+        raisedLetter.Value.Should().BeNull();
+        raisedLetter.At.Should().Be(1);
+        raisedLetter.NotAt.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void ShouldPassLetterNotAtIndex_WhenYellowLetterInput()
+    {
+        var raisedLetter = new LetterSpace();
+        Action<LetterSpace> changed = (e) => raisedLetter = e;
+        var cut = Render(@<LetterInput Status="LetterStatus.Yellow" Index="2" LetterChanged="changed" />);
+
+        var input = cut.Find("input");
+        input.Input("z");
+
+        raisedLetter.Value.Should().Be('z');
+        raisedLetter.NotAt.Should().BeEquivalentTo(new[] { 2 });
+        raisedLetter.At.Should().BeNull();
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void ShouldPassNullNotAtIndex_WhenYellowNullOrWhitespaceInput(string value)
+    {
+        var raisedLetter = new LetterSpace();
+        Action<LetterSpace> changed = (e) => raisedLetter = e;
+        var cut = Render(@<LetterInput Status="LetterStatus.Yellow" Index="2" LetterChanged="changed" />);
+
+        var input = cut.Find("input");
+        input.Input(value);
+
+        raisedLetter.Value.Should().BeNull();
+        raisedLetter.NotAt.Should().BeEquivalentTo(new[] { 2 });
+        raisedLetter.At.Should().BeNull();
+    }
+}

@@ -3,16 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Web", "Wordler.Web\Wordler.Web.csproj", "{7358381A-3D07-4961-81F6-FFF771851CAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Web", "src\Wordler.Web\Wordler.Web.csproj", "{7358381A-3D07-4961-81F6-FFF771851CAA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Core.UnitTests", "Wordler.Core.UnitTests\Wordler.Core.UnitTests.csproj", "{0BE52C09-91CF-499F-8840-8126FF0B924D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Core.UnitTests", "test\Wordler.Core.UnitTests\Wordler.Core.UnitTests.csproj", "{0BE52C09-91CF-499F-8840-8126FF0B924D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Core", "Wordler.Core\Wordler.Core.csproj", "{8A2CE0C4-7E8A-436B-AC57-14330A920C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Core", "src\Wordler.Core\Wordler.Core.csproj", "{8A2CE0C4-7E8A-436B-AC57-14330A920C05}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8D3797E3-814D-4F87-AD50-1740D856CC39}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A320F05D-DF95-44C4-9410-8D711E29A80E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BD2DE5DC-32D6-4196-9E62-40B8EEA1AEBE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wordler.Web.ComponentTests", "test\Wordler.Web.ComponentTests\Wordler.Web.ComponentTests.csproj", "{4E1A4844-7AED-4D73-B313-B9AFAA10E410}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +38,19 @@ Global
 		{8A2CE0C4-7E8A-436B-AC57-14330A920C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A2CE0C4-7E8A-436B-AC57-14330A920C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A2CE0C4-7E8A-436B-AC57-14330A920C05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E1A4844-7AED-4D73-B313-B9AFAA10E410}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E1A4844-7AED-4D73-B313-B9AFAA10E410}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E1A4844-7AED-4D73-B313-B9AFAA10E410}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E1A4844-7AED-4D73-B313-B9AFAA10E410}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7358381A-3D07-4961-81F6-FFF771851CAA} = {A320F05D-DF95-44C4-9410-8D711E29A80E}
+		{0BE52C09-91CF-499F-8840-8126FF0B924D} = {BD2DE5DC-32D6-4196-9E62-40B8EEA1AEBE}
+		{8A2CE0C4-7E8A-436B-AC57-14330A920C05} = {A320F05D-DF95-44C4-9410-8D711E29A80E}
+		{4E1A4844-7AED-4D73-B313-B9AFAA10E410} = {BD2DE5DC-32D6-4196-9E62-40B8EEA1AEBE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD0CEE73-7540-4878-A073-A36F5C1006FE}
