@@ -1,0 +1,38 @@
+﻿@using NSubstitute;
+
+@inherits TestContext
+
+@code {
+    IMixerService MixerService;
+
+    IEnumerable<LetterSpace> CapturedMixerInput = Array.Empty<LetterSpace>();
+
+    const string TestPossibility = "MOCKS";
+    List<IEnumerable<char?>> TestPossibilities = new() { TestPossibility.Cast<char?>() };
+
+    public InputMixerTests()
+    {
+        MixerService = Substitute.For<IMixerService>();
+        MixerService.Mix(Arg.Do<IEnumerable<LetterSpace>>(arg => CapturedMixerInput = arg))
+            .Returns(TestPossibilities);
+        Services.AddSingleton<IMixerService>(MixerService);
+    }
+
+    [Fact]
+    public void ShouldPassSingleYellowToMixer_WhenInput()
+    {
+        var raised = new List<string>();
+        Action<IEnumerable<string>> changed = (e) => raised = e.ToList();
+        var cut = Render(@<InputMixer PossibilitesChanged="@changed" />);
+
+        var input = cut.Find("input");
+        input.Input("z");
+
+        var letter = CapturedMixerInput.Single();
+        letter.Value.Should().Be('z');
+        letter.NotAt.Should().BeEquivalentTo(new[] { 0 });
+
+        raised.Single().Should().Be(TestPossibility);
+    }
+
+}
