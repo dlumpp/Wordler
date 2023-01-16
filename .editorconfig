@@ -8,6 +8,10 @@ indent_style = space
 [*.xml]
 indent_size = 2
 
+# YAML files
+[*.{yaml,yml}]
+indent_size = 2
+
 # C# files
 [*.cs]
 
