@@ -6,13 +6,18 @@ namespace Wordler.Core
     public class WordPad
     {
         public Stack<LetterSpace> Pool { get; set; }
+
+        public WordPad(Stack<LetterSpace> pool)
+        {
+            Pool = pool;
+        }
+
         public Word Word { get; set; } = new();
 
         public bool IsCompleted => Pool.Count == 0;
 
-        public WordPad Clone() => new()
+        public WordPad Clone() => new(new(Pool))
         {
-            Pool = new(Pool),
             Word = new() { Letters = new(Word.Letters) }
         };
     }
@@ -38,7 +43,7 @@ namespace Wordler.Core
         public static IEnumerable<IEnumerable<char?>> Mix(IEnumerable<LetterSpace> pool)
         {
             var letterQ = new Stack<LetterSpace>(pool);
-            var initPad = new WordPad { Pool = letterQ };
+            var initPad = new WordPad(letterQ);
             var pads = PlaceAll(new[] { initPad });
             return pads.Select(wp => wp.Word.Letters).Distinct(new EnumerableValuesComparer<char?>());
         }
