@@ -50,8 +50,10 @@
     async Task RecalcPossibilitiesAsync()
     {
         var letters = EmptyIfNull(AggregateYellowKnowledge()).Concat(EmptyIfNull(GreenWord));
-        var mix = MixerService.Mix(letters).Select(LettersToWord).ToList();
-        await PossibilitesChanged.InvokeAsync(mix);
+        var mix = letters.Any(l => l.Value.HasValue) ?
+            MixerService.Mix(letters).Select(LettersToWord)
+            : Array.Empty<string>();
+        await PossibilitesChanged.InvokeAsync(mix.ToList());
     }
 
     IEnumerable<LetterSpace> AggregateYellowKnowledge()
