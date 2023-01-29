@@ -66,8 +66,9 @@
 
         var addButton = cut.Find("button");
         addButton.Click();
-        var firstWordFirstLetter = cut.Find(".yellow > input");
-        var secondWordSecondLetter = cut.Find(".yellow:nth-of-type(2) > input:nth-of-type(2)");
+        var yellowWords = cut.FindAll(".yellow").ToList();
+        var firstWordFirstLetter = yellowWords[0].GetElementsByTagName("input").First();
+        var secondWordSecondLetter = yellowWords[1].GetElementsByTagName("input")[1];
         firstWordFirstLetter.Input("y");
         secondWordSecondLetter.Input("y");
 
