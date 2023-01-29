@@ -4,13 +4,18 @@ html, body {
     background-color: #121213;
 }
 
+header {
+    text-align: center;
+}
+
 ::selection {
     background: #ff3333;
 }
 
 .add-yellow-btn {
-    background-color: #ffffff;
+    position: absolute;
     margin: .4rem;
+    background-color: #ffffff;
     border-radius: .3rem;
 }
 
@@ -38,6 +43,7 @@ html, body {
 }
 
 .possibilites {
+    text-align: center;
     text-transform: uppercase;
     letter-spacing: .15rem;
     font-size: 24px;

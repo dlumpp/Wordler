@@ -3,16 +3,22 @@
 
 <PageTitle>Wordler</PageTitle>
 
-<InputMixer PossibilitesChanged="PossibilitesChangedAsync" />
+<header>
+    <h1>Wordler</h1>
+</header>
 
-<div class="possibilites">
-    @foreach (var possible in Possibilites)
-    {
-        <p>@possible</p>
-    }
-</div>
+<section>
+    <InputMixer PossibilitesChanged="PossibilitesChangedAsync" />
 
-@code{
+    <div class="possibilites">
+        @foreach (var possible in Possibilites)
+        {
+            <p>@possible</p>
+        }
+    </div>
+</section>
+
+@code {
     IEnumerable<string> Possibilites { get; set; } = Array.Empty<string>();
 
     Task PossibilitesChangedAsync(IEnumerable<string> mixes)
