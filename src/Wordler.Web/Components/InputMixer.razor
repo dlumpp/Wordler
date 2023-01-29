@@ -6,10 +6,15 @@
 <div>
     @for (int i = 0; i < YellowWordCount; i++)
     {
-        var wordIndex = i;
-        <WordInput WordChanged="@(word => YellowWordChangedAsync(word, wordIndex))" Status="LetterStatus.Yellow" />
+        <div>
+            @{var wordIndex = i;}
+            <WordInput WordChanged="@(word => YellowWordChangedAsync(word, wordIndex))" Status="LetterStatus.Yellow" />
+            @if(i == YellowWordCount - 1)
+            {                
+                <button class="add-yellow-btn" @onclick="@(() => YellowWordCount++)">+</button>
+            }
+        </div>
     }
-    <button @onclick="@(() => YellowWordCount++)">+</button>
 </div>
 
 <div>
@@ -22,7 +27,7 @@
 
     int YellowWordCount = 1;
 
-    Dictionary<int, IEnumerable<LetterSpace>> YellowWords = new ();
+    Dictionary<int, IEnumerable<LetterSpace>> YellowWords = new();
 
     IEnumerable<LetterSpace>? GreenWord;
 
@@ -45,8 +50,10 @@
     async Task RecalcPossibilitiesAsync()
     {
         var letters = EmptyIfNull(AggregateYellowKnowledge()).Concat(EmptyIfNull(GreenWord));
-        var mix = MixerService.Mix(letters).Select(LettersToWord).ToList();
-        await PossibilitesChanged.InvokeAsync(mix);
+        var mix = letters.Any(l => l.Value.HasValue) ?
+            MixerService.Mix(letters).Select(LettersToWord)
+            : Array.Empty<string>();
+        await PossibilitesChanged.InvokeAsync(mix.ToList());
     }
 
     IEnumerable<LetterSpace> AggregateYellowKnowledge()
@@ -88,7 +95,7 @@
             {
                 // might already be there w aggregated indexes from another word
                 if (!agg.Any(l => l.Value == letter.Value))
-                {                    
+                {
                     agg.Add(letter);
                 }
             }
