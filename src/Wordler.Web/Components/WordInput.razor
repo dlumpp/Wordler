@@ -1,6 +1,6 @@
 ﻿@using Wordler.Core
 
-<div class="@GetStatusClass()">
+<span class="word-input @GetStatusClass()">
     @for (int i = 0; i < Wordler.Core.Mixer.WordSize; i++)
     {
         <LetterInput Status="Status"
@@ -8,7 +8,7 @@
                  LetterChanged="@LetterInputChanged">
         </LetterInput>
     }
-</div>
+</span>
 
 @code {
 
