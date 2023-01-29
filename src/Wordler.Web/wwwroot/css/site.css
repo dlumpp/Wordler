@@ -9,6 +9,10 @@ header {
     font-family: Georgia,Times,Times New Roman,serif;
 }
 
+.title-header {
+    margin-top: 0;
+}
+
 section {
     text-align: center;
 }
