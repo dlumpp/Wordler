@@ -25,7 +25,7 @@
         Action<IEnumerable<string>> changed = (e) => raised = e.ToList();
         var cut = Render(@<InputMixer PossibilitesChanged="@changed" />);
 
-        var input = cut.Find("input");
+        var input = cut.Find(".word-input.yellow input");
         input.Input("z");
 
         var letter = CapturedMixerInput.Single();
@@ -42,9 +42,9 @@
         Action<IEnumerable<string>> changed = (e) => raised = e.ToList();
         var cut = Render(@<InputMixer PossibilitesChanged="@changed" />);
 
-        var firstInput = cut.Find("input");
+        var firstInput = cut.Find(".word-input.yellow input");
         firstInput.Input("z");
-        var secondInput = cut.Find("input:nth-of-type(2)");
+        var secondInput = cut.Find(".word-input.yellow input:nth-of-type(2)");
         secondInput.Input("z");
 
         CapturedMixerInput.Should().HaveCount(2).And

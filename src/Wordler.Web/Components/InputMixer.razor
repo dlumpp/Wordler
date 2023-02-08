@@ -4,6 +4,10 @@
 @inject IMixerService MixerService;
 
 <div>
+    <WordInput WordChanged="@GreenWordChangedAsync" Status="LetterStatus.Green" />
+</div>
+
+<div>
     @for (int i = 0; i < YellowWordCount; i++)
     {
         <div>
@@ -15,10 +19,6 @@
             }
         </div>
     }
-</div>
-
-<div>
-    <WordInput WordChanged="@GreenWordChangedAsync" Status="LetterStatus.Green" />
 </div>
 
 @code {
