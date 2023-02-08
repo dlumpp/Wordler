@@ -1,4 +1,5 @@
-﻿@using NSubstitute;
+﻿@using FluentAssertions.Execution;
+@using NSubstitute;
 
 @inherits TestContext
 
@@ -75,6 +76,38 @@
         var letter = CapturedMixerInput.Single();
         letter.Value.Should().Be('y');
         letter.NotAt.Should().BeEquivalentTo(new[] { 0, 1 });
+
+        raised.Single().Should().Be(TestPossibility);
+    }
+
+    [Fact]
+    public void ShouldPassMultiYellowMultiNotsToMixer_WhenInput()
+    {
+        var raised = new List<string>();
+        Action<IEnumerable<string>> changed = (e) => raised = e.ToList();
+        var cut = Render(@<InputMixer PossibilitesChanged="@changed" />);
+
+        var addButton = cut.Find("button");
+        addButton.Click();
+        var yellowWords = cut.FindAll(".yellow").ToList();
+        var firstWordInputs = yellowWords[0].GetElementsByTagName("input");
+        var secondWordInputs = yellowWords[1].GetElementsByTagName("input");
+        
+        firstWordInputs[0].Input("T");
+        firstWordInputs[2].Input("I");
+        firstWordInputs[3].Input("N");
+        
+        secondWordInputs[1].Input("I");
+        secondWordInputs[2].Input("N");
+        secondWordInputs[3].Input("T");
+
+        var actual = CapturedMixerInput.ToDictionary(ls => ls.Value ?? throw new Exception("Value is null"), ls => ls.NotAt);
+        using(new AssertionScope())
+        {            
+            actual['T'].Should().BeEquivalentTo(new[] { 0, 3 });
+            actual['I'].Should().BeEquivalentTo(new[] { 1, 2 });
+            actual['N'].Should().BeEquivalentTo(new[] { 2, 3 });
+        }
 
         raised.Single().Should().Be(TestPossibility);
     }

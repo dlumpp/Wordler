@@ -68,9 +68,9 @@
         var sameLetters = yellowWords.SelectMany(word => word)
             .GroupBy(l => l.Value)
             .Where(g => g.Count() > 1);
-        var distinctNotIndexes = sameLetters.SelectMany(l => l.SelectMany(m => m.NotAt)).ToHashSet();
         foreach (var letterGroup in sameLetters)
         {
+            var distinctNotIndexes = letterGroup.SelectMany(m => m.NotAt).ToHashSet();
             foreach (var repeatLetter in letterGroup)
             {
                 repeatLetter.NotAt = distinctNotIndexes.ToList();
