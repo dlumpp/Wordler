@@ -70,5 +70,19 @@ namespace Wordler.Core.UnitTests
             var words = actual.Select(x => LettersToWord(x)).ToArray();
             words.Single().Should().Be("T__IA");
         }
+
+        [Fact]
+        public void SingleYellowAndDoubleYellowSameLetter()
+        {
+            // Issue: R not at 1, and RR not at 0 and 4
+            // This represents: one yellow word with R, another yellow word with RR
+            // After fix: should work with 2 R's (max from any word, not sum of 3)
+            var actual = Act('R'.NotAt(1, 0, 4), 'R'.NotAt(1, 0, 4));
+            var words = actual.Select(x => LettersToWord(x)).ToArray();
+            
+            words.Should().NotBeEmpty("because the word should have at least 2 R's");
+            // Should find words with exactly 2 R's in valid positions (2 and 3)
+            words.Should().Equal("__RR_");
+        }
     }
 }
