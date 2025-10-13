@@ -5,9 +5,9 @@
 Wordler is a Wordle-solving aid built with Blazor WebAssembly. It helps users get unstuck by taking known letters (green/yellow clues from Wordle) and showing all possible letter combinations.
 
 **Tech Stack:**
-- .NET 6.0
+- .NET 8.0
 - Blazor WebAssembly (client-side)
-- C# 10
+- C#
 - xUnit for unit tests
 - bUnit for Blazor component tests
 
@@ -122,7 +122,7 @@ dotnet test test/Wordler.Core.UnitTests/
 ## Deployment
 
 The project uses GitHub Actions to:
-1. Build and test on every push/PR to main
+1. Build and test on every PR
 2. Publish to GitHub Pages automatically on main branch
 3. Generate test reports
 
