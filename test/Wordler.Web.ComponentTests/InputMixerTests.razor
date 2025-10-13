@@ -134,13 +134,6 @@
         secondWordInputs[0].Input("R");
         secondWordInputs[4].Input("R");
 
-        // Debug: print count
-        Console.WriteLine($"CapturedMixerInput count: {CapturedMixerInput.Count()}");
-        foreach (var item in CapturedMixerInput)
-        {
-            Console.WriteLine($"  Value: {item.Value}, NotAt: [{string.Join(",", item.NotAt)}]");
-        }
-
         CapturedMixerInput.Should().HaveCount(2, "because max R count in any single word is 2")
             .And.AllSatisfy(i =>
             {

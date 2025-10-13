@@ -62,8 +62,6 @@
         List<List<LetterSpace>> yellowWords = YellowWords.Values
             .Select(i => i.Select(j => new LetterSpace { Value = j.Value, NotAt = new(j.NotAt) }).ToList()).ToList();
 
-        var agg = new List<LetterSpace>();
-
         //spread the same "not at" info to all same letters across all words
         var sameLetters = yellowWords.SelectMany(word => word)
             .GroupBy(l => l.Value)
@@ -78,22 +76,18 @@
         }
 
         //aggregate letters by taking max count per letter across all words
-        var allLetters = yellowWords.SelectMany(word => word).GroupBy(l => l.Value);
-        foreach (var letterGroup in allLetters)
-        {
-            // Find the maximum count of this letter in any single word
-            var maxCountInAnyWord = yellowWords
-                .Select(word => word.Count(l => l.Value == letterGroup.Key))
-                .Max();
-            
-            // Add that many instances of the letter
-            for (int i = 0; i < maxCountInAnyWord; i++)
+        return yellowWords
+            .SelectMany(word => word)
+            .GroupBy(l => l.Value)
+            .SelectMany(letterGroup =>
             {
-                agg.Add(letterGroup.First());
-            }
-        }
-        
-        return agg;
+                // Find the maximum count of this letter in any single word
+                var maxCountInAnyWord = yellowWords
+                    .Select(word => word.Count(l => l.Value == letterGroup.Key))
+                    .Max();
+                // Add that many instances of the letter
+                return Enumerable.Repeat(letterGroup.First(), maxCountInAnyWord);
+            });
     }
 
     IEnumerable<T> EmptyIfNull<T>(IEnumerable<T>? values) => values ?? Array.Empty<T>();
