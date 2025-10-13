@@ -1,0 +1,15 @@
+name: 'Build'
+description: 'Setup .NET and build project'
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+      shell: bash
+    - name: Build
+      run: dotnet build --no-restore
+      shell: bash

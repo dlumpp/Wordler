@@ -1,0 +1,25 @@
+name: Publish
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      uses: ./.github/actions/build
+    - name: Test
+      uses: ./.github/actions/test
+    - name: Publish
+      run: dotnet publish -c:Release -o:publish -p:GHPages=true
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: publish/wwwroot
+        force_orphan: true

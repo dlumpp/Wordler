@@ -1,0 +1,15 @@
+name: Build and Test
+
+on:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      uses: ./.github/actions/build
+    - name: Test
+      uses: ./.github/actions/test
