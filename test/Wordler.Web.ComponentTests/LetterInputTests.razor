@@ -20,7 +20,7 @@
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void ShouldPassNullAtIndex_WhenGreenNullOrWhitespaceInput(string value)
+    public void ShouldPassNullAtIndex_WhenGreenNullOrWhitespaceInput(string? value)
     {
         var raisedLetter = new LetterSpace();
         Action<LetterSpace> changed = (e) => raisedLetter = e;
@@ -53,7 +53,7 @@
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void ShouldPassNullNotAtIndex_WhenYellowNullOrWhitespaceInput(string value)
+    public void ShouldPassNullNotAtIndex_WhenYellowNullOrWhitespaceInput(string? value)
     {
         var raisedLetter = new LetterSpace();
         Action<LetterSpace> changed = (e) => raisedLetter = e;
