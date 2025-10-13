@@ -5,5 +5,7 @@ runs:
   steps:
     - name: Restore dependencies
       run: dotnet restore
+      shell: bash
     - name: Build
       run: dotnet build --no-restore
+      shell: bash
