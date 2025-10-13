@@ -1,0 +1,19 @@
+name: Build and Test
+
+on:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 8.0.x
+    - name: Build
+      uses: ./.github/actions/build
+    - name: Test
+      uses: ./.github/actions/test
