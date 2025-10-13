@@ -7,7 +7,7 @@ runs:
       run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
       shell: bash
     - name: Test Report
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v2
       if: success() || failure()
       with:
         name: xUnit Tests
