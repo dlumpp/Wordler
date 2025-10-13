@@ -1,0 +1,9 @@
+name: 'Build'
+description: 'Build .NET project'
+runs:
+  using: 'composite'
+  steps:
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore

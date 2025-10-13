@@ -16,20 +16,11 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
+        dotnet-version: 8.0.x
     - name: Build
-      run: dotnet build --no-restore
+      uses: ./.github/actions/build
     - name: Test
-      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
-    - name: Test Report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: xUnit Tests
-        path: '**/TestResults/test-results.trx'
-        reporter: dotnet-trx
+      uses: ./.github/actions/test
     - name: Publish
       run: dotnet publish -c:Release -o:publish -p:GHPages=true
     - name: Deploy
