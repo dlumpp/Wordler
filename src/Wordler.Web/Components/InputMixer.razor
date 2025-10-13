@@ -62,8 +62,6 @@
         List<List<LetterSpace>> yellowWords = YellowWords.Values
             .Select(i => i.Select(j => new LetterSpace { Value = j.Value, NotAt = new(j.NotAt) }).ToList()).ToList();
 
-        var agg = new List<LetterSpace>();
-
         //spread the same "not at" info to all same letters across all words
         var sameLetters = yellowWords.SelectMany(word => word)
             .GroupBy(l => l.Value)
@@ -77,30 +75,19 @@
             }
         }
 
-        //aggregate words to a single list of letters
-        foreach (var word in yellowWords)
-        {
-            //add repeat letters if within the same word
-            var repeatLetters = word.GroupBy(l => l.Value).Where(g => g.Count() > 1);
-            foreach (var letterGroup in repeatLetters)
+        //aggregate letters by taking max count per letter across all words
+        return yellowWords
+            .SelectMany(word => word)
+            .GroupBy(l => l.Value)
+            .SelectMany(letterGroup =>
             {
-                foreach (var repeatLetter in letterGroup)
-                {
-                    agg.Add(repeatLetter);
-                }
-            }
-            //aggregate non-repeats
-            var remainingLetters = word.Except(agg);
-            foreach (var letter in remainingLetters)
-            {
-                // might already be there w aggregated indexes from another word
-                if (!agg.Any(l => l.Value == letter.Value))
-                {
-                    agg.Add(letter);
-                }
-            }
-        }
-        return agg;
+                // Find the maximum count of this letter in any single word
+                var maxCountInAnyWord = yellowWords
+                    .Select(word => word.Count(l => l.Value == letterGroup.Key))
+                    .Max();
+                // Add that many instances of the letter
+                return Enumerable.Repeat(letterGroup.First(), maxCountInAnyWord);
+            });
     }
 
     IEnumerable<T> EmptyIfNull<T>(IEnumerable<T>? values) => values ?? Array.Empty<T>();
