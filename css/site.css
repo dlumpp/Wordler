@@ -1,0 +1,63 @@
+html, body {
+    font-family: 'Century Gothic', CenturyGothic, AppleGothic, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    background-color: #121213;
+}
+
+header {
+    text-align: center;
+    font-family: Georgia,Times,Times New Roman,serif;
+}
+
+.title-header {
+    margin-top: 0;
+}
+
+section {
+    text-align: center;
+}
+
+    section.faq {
+        font-family: Georgia,Times,Times New Roman,serif;
+    }
+
+::selection {
+    background: #ff3333;
+}
+
+.add-yellow-btn {
+    position: absolute;
+    margin: .4rem;
+    background-color: #ffffff;
+    border-radius: .3rem;
+}
+
+.word-input {
+    font-size: 24px;
+}
+
+
+.letter-input {
+    width: 1.5em;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: inherit;
+    color: #ffffff;
+    margin: .1rem;
+}
+
+.green .letter-input {
+    background-color: #538d4e;
+}
+
+.yellow .letter-input {
+    background-color: #b59f3b;
+}
+
+.possibilites {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .15rem;
+    font-size: 24px;
+}
